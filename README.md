@@ -74,7 +74,15 @@ async function main(e, t) { function n(e, t) { return new Promise(n => { setTime
 await main(selfId, lastId);
 ```
 
-7. You can now paste this data into any spreadsheet!
+8. Press `enter` to submit the code. Wait for it to retrieve the data. Make sure to keep the page open so it runs faster. It might take a few minutes to run depending on how many games you have. Once it is done running, you should see a big block of text:
+
+![Data output](images/data_output.png)
+
+9. `Right click` on the block of text and select "Copy string contents":
+
+![Copy data](images/copy_string.png)
+
+10. You can now paste this data into any spreadsheet!
 
 ## Phase 2: Data Visualization
 
