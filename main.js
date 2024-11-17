@@ -92,7 +92,8 @@ async function main(selfId, lastId) {
           res.befElo = team.players[0].rating;
           res.aftElo = res.befElo;
         } else {
-          const rating = team.players[0].progressChange.competitiveProgress;
+          //competitifeProgress if for older games, rankedSystemProgress is the new format (as of 2024/11/17)
+          const rating = team.players[0].progressChange.competitiveProgress || team.players[0].progressChange.rankedSystemProgress;
           if (rating === null) {
             res.befElo = team.players[0].rating;
             res.aftElo = res.befElo;
@@ -106,7 +107,13 @@ async function main(selfId, lastId) {
       } else {
         res.oppId = team.players[0].playerId;
         res.oppHp = team.health;
-        res.oppElo = team.players[0].rating;
+        let ratingOpp = team.players[0].progressChange.competitiveProgress || team.players[0].progressChange.rankedSystemProgress;
+        if (ratingOpp === null) {
+          res.oppElo = team.players[0].rating;
+        } else {
+          res.oppElo = ratingOpp.ratingBefore;
+        }
+        
         [res.oppDist, res.oppTtg, _nil] = S(team.players[0].guesses, data.rounds);
 
         if (!opps[res.oppId]) {
@@ -195,7 +202,7 @@ async function main(selfId, lastId) {
 
         await promisedTimeout(() => null, 150);
       } catch(error) {
-        // In case of error, continue the loop
+        // In case of error, e.g. 404, continue the loop
         console.log(`Error fetching duel ${id}`);
       }
       
