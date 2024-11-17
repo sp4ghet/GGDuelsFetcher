@@ -186,13 +186,19 @@ async function main(selfId, lastId) {
 
     for (const id of duels) {
       console.log(`Fetching duel #${i++} / ${duels.length}`);
-      let info = await fetch(`https://game-server.geoguessr.com/api/duels/${id}`, { credentials: 'include' })
-      info = await info.json();
+      try {
+        let info = await fetch(`https://game-server.geoguessr.com/api/duels/${id}`, { credentials: 'include' });
+        info = await info.json();
 
-      const duelData = await parseDuelData(info);
-      duelDatas.push(duelData);
+        const duelData = await parseDuelData(info);
+        duelDatas.push(duelData);
 
-      await promisedTimeout(() => null, 150);
+        await promisedTimeout(() => null, 150);
+      } catch(error) {
+        // In case of error, continue the loop
+        console.log(`Error fetching duel ${id}`);
+      }
+      
     }
 
     return duelDatas;
